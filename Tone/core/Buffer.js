@@ -124,9 +124,12 @@ define(["Tone/core/Tone", "Tone/core/Emitter", "Tone/type/Type", "Tone/shim/Audi
 	 *  @param {String} url The url of the buffer to load.
 	 *                      filetype support depends on the
 	 *                      browser.
+	 *  @param {Function} onload Callback to be called when the buffer loads
+	 *  @param {Function} onerror Callback to be called in the event of an error
+	 *  @param {Object} options Additional options passed to the xhr request
 	 *  @returns {Promise} returns a Promise which resolves with the Tone.Buffer
 	 */
-	Tone.Buffer.prototype.load = function(url, onload, onerror){
+	Tone.Buffer.prototype.load = function(url, onload, onerror, options){
 
 		var promise = new Promise(function(load, error){
 
@@ -150,7 +153,9 @@ define(["Tone/core/Tone", "Tone/core/Emitter", "Tone/type/Type", "Tone/shim/Audi
 					if (onerror){
 						onerror(err);
 					}
-				}.bind(this));
+				}.bind(this),
+			
+			options);
 
 		}.bind(this));
 
@@ -426,9 +431,10 @@ define(["Tone/core/Tone", "Tone/core/Emitter", "Tone/type/Type", "Tone/shim/Audi
 	 *  @param {Function} onload
 	 *  @param {Function} onerror
 	 *  @param {Function} onprogress
+	 *  @param {Object} options
 	 *  @return {XMLHttpRequest}
 	 */
-	Tone.Buffer.load = function(url, onload, onerror){
+	Tone.Buffer.load = function(url, onload, onerror, options){
 		//default
 		onload = Tone.defaultArg(onload, Tone.noOp);
 
@@ -504,6 +510,12 @@ define(["Tone/core/Tone", "Tone/core/Emitter", "Tone/type/Type", "Tone/shim/Audi
 				onProgress();
 			}
 		});
+
+		if (options.headers) {
+			options.headers.forEach(function(header) {
+				request.setRequestHeader(header);
+			});
+		}
 
 		request.send();
 
