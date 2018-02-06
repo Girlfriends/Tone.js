@@ -512,9 +512,11 @@ define(["Tone/core/Tone", "Tone/core/Emitter", "Tone/type/Type", "Tone/shim/Audi
 		});
 
 		if (options.headers) {
-			options.headers.forEach(function(header) {
-				request.setRequestHeader(header);
-			});
+			for (var header in options.headers) {
+				if (options.headers.hasOwnProperty(header)) {
+					request.setRequestHeader(header, options.headers[header]);
+				}
+			}
 		}
 
 		request.send();
