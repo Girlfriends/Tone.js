@@ -36,6 +36,9 @@
     "semver": "^5.4.1",
     "yargs": "^7.0.2"
   },
+  "optionalDependencies": {
+    "fsevents": "*"
+  },
   "scripts": {
     "test": "gulp karma-test"
   },
